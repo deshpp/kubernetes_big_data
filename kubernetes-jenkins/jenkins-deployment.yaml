@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+        volumes:
+           - name: jenkins-pv-storage
+             persistentVolumeClaim:
+               claimName: jenkins-pvc
+
+        containers:
+        - 
+          env:
+            - 
+              name: JAVA_OPTS
+              value: "-Djenkins.install.runSetupWizard=false"
+          image: "pdeshpande/jenkins-kubernetes-images:1.0"
+          imagePullPolicy: Always
+          name: jenkins
+          ports:
+            - 
+              containerPort: 8080
+              name: http-port
+            - 
+              containerPort: 50000
+              name: jnlp-port
+          volumeMounts:
+            - 
+              mountPath: /var/jenkins_home
+              name: jenkins-pv-storage
